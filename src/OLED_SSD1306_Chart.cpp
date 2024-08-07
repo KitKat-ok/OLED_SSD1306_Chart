@@ -159,7 +159,7 @@ void OLED_SSD1306_Chart::setLineThickness(char thickness, uint8_t chart)
     }
 }
 
-void OLED_SSD1306_Chart::setYLimitLabels(char *loLabel, char *hiLabel, uint8_t chart)
+void OLED_SSD1306_Chart::setYLimitLabels(const char *loLabel, const char *hiLabel, uint8_t chart)
 {
     if (chart == 0 || chart == 1)
     {
