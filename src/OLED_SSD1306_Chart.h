@@ -1,5 +1,9 @@
+#ifndef OLED_SSD1306_CHART_H
+#define OLED_SSD1306_CHART_H
+
 #include <Adafruit_SSD1306.h>
 #include <Wire.h>
+
 
 #define SINGLE_PLOT_MODE 0
 #define DOUBLE_PLOT_MODE 1
@@ -111,3 +115,5 @@ public:
     void drawChart();
     bool updateChart(double firstValue, double secondValue = 0);
 };
+
+#endif

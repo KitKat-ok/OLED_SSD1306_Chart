@@ -1,4 +1,5 @@
 #include "OLED_SSD1306_Chart.h"
+#include <oledManager.h>
 
 /*!
     @brief  Updates the internal buffer to draw the cartesian graph
@@ -248,7 +249,7 @@ bool OLED_SSD1306_Chart::updateChart(double firstValue, double secondValue)
         if (_point_geometry[0] == POINT_GEOMETRY_CIRCLE)
             fillCircle(_previous_x_coordinate[0] + _x_drawing_offset, _previous_y_coordinate[0], 2, WHITE);
 
-        display();
+        manager.oledDisplay();
         return true;
     }
 
@@ -276,7 +277,7 @@ bool OLED_SSD1306_Chart::updateChart(double firstValue, double secondValue)
         if (_point_geometry[1] == POINT_GEOMETRY_CIRCLE)
             fillCircle(_previous_x_coordinate[1] + _x_drawing_offset, _previous_y_coordinate[1], 2, WHITE);
 
-        display();
+        manager.oledDisplay();
         return true;
     }
 }
