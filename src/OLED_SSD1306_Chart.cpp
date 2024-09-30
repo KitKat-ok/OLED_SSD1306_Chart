@@ -1,11 +1,9 @@
 #include "OLED_SSD1306_Chart.h"
 #include <oledManager.h>
 
-/*!
-    @brief  Updates the internal buffer to draw the cartesian graph
-    @note   Call the object's begin() function before use -- buffer allocation is performed there!
-            Call the object's configureChart() function before use -- params are updated there
-*/
+Adafruit_SSD1306 display;
+
+// Draw the chart
 void OLED_SSD1306_Chart::drawChart()
 {
     double i, temp;
@@ -24,117 +22,109 @@ void OLED_SSD1306_Chart::drawChart()
             int16_t x, y;
             uint16_t w, h;
 
-            setTextSize(1);
-            setTextColor(WHITE);
+            display.setTextSize(1);
+            display.setTextColor(WHITE);
 
-            getTextBounds(_y_max_label[0], _x_lower_left_coordinate + 5, _y_lower_left_coordinate + 5 - _chart_height, &x, &y, &w, &h);
+            display.getTextBounds(String(_y_max_label[0]), _x_lower_left_coordinate + 5, _y_lower_left_coordinate + 5 - _chart_height, &x, &y, &w, &h);
             _x_drawing_offset = w;
 
-            // high label
-            setCursor(_x_lower_left_coordinate, _y_lower_left_coordinate - _chart_height);
-            write(_y_max_label[0]);
+            display.setCursor(_x_lower_left_coordinate, _y_lower_left_coordinate - _chart_height);
+            display.print(String(_y_max_label[0])); // Use print instead of write
 
-            getTextBounds(_y_min_label[0], _x_lower_left_coordinate + 5, _y_lower_left_coordinate - 5, &x, &y, &w, &h);
-
-            // low label
-            setCursor(_x_lower_left_coordinate, _y_lower_left_coordinate - (h / 2));
-            write(_y_min_label[0]);
+            display.getTextBounds(String(_y_min_label[0]), _x_lower_left_coordinate + 5, _y_lower_left_coordinate - 5, &x, &y, &w, &h);
+            display.setCursor(_x_lower_left_coordinate, _y_lower_left_coordinate - (h / 2));
+            display.print(String(_y_min_label[0])); // Use print instead of write
 
             if (w > _x_drawing_offset)
             {
                 _x_drawing_offset = w;
             }
 
-            // compensation for the y axis tick lines
-            _x_drawing_offset += 4;
+            _x_drawing_offset += 4; // Compensation for the y axis tick lines
         }
         else if (_mode == DOUBLE_PLOT_MODE)
         {
             int16_t x, y;
             uint16_t w, h;
 
-            setTextSize(1);
-            setTextColor(WHITE);
-            //Chart 1
-            getTextBounds(_y_max_label[1], _x_lower_left_coordinate + 5, _y_lower_left_coordinate + 5 - _chart_height, &x, &y, &w, &h);
+            display.setTextSize(1);
+            display.setTextColor(WHITE);
+
+            display.getTextBounds(String(_y_max_label[1]), _x_lower_left_coordinate + 5, _y_lower_left_coordinate + 5 - _chart_height, &x, &y, &w, &h);
             _x_drawing_offset = w;
 
-            // high label
-            setCursor(_x_lower_left_coordinate, _y_lower_left_coordinate - _chart_height);
-            write(_y_max_label[1]);
+            display.setCursor(_x_lower_left_coordinate, _y_lower_left_coordinate - _chart_height);
+            display.print(String(_y_max_label[1])); // Use print instead of write
 
-            getTextBounds(_y_min_label[1], _x_lower_left_coordinate + 5, _y_lower_left_coordinate - 5, &x, &y, &w, &h);
-
-            // low label
-            setCursor(_x_lower_left_coordinate, _y_lower_left_coordinate - _chart_height / 2 - (h / 2));
-            write(_y_min_label[1]);
+            display.getTextBounds(String(_y_min_label[1]), _x_lower_left_coordinate + 5, _y_lower_left_coordinate - 5, &x, &y, &w, &h);
+            display.setCursor(_x_lower_left_coordinate, _y_lower_left_coordinate - _chart_height / 2 - (h / 2));
+            display.print(String(_y_min_label[1])); // Use print instead of write
 
             if (w > _x_drawing_offset)
             {
                 _x_drawing_offset = w;
             }
 
-            //Chart 0
-            getTextBounds(_y_max_label[0], _x_lower_left_coordinate + 5, _y_lower_left_coordinate + 5 - _chart_height, &x, &y, &w, &h);
+            display.getTextBounds(String(_y_max_label[0]), _x_lower_left_coordinate + 5, _y_lower_left_coordinate + 5 - _chart_height, &x, &y, &w, &h);
             if (w > _x_drawing_offset)
             {
                 _x_drawing_offset = w;
             }
 
-            // high label
-            setCursor(_x_lower_left_coordinate, _y_lower_left_coordinate - _chart_height / 2 + (h / 2));
-            write(_y_max_label[0]);
+            display.setCursor(_x_lower_left_coordinate, _y_lower_left_coordinate - _chart_height / 2 + (h / 2));
+            display.print(String(_y_max_label[0])); // Use print instead of write
 
-            getTextBounds(_y_min_label[0], _x_lower_left_coordinate + 5, _y_lower_left_coordinate - 5, &x, &y, &w, &h);
-
-            // low label
-            setCursor(_x_lower_left_coordinate, _y_lower_left_coordinate - (h / 2));
-            write(_y_min_label[0]);
+            display.getTextBounds(String(_y_min_label[0]), _x_lower_left_coordinate + 5, _y_lower_left_coordinate - 5, &x, &y, &w, &h);
+            display.setCursor(_x_lower_left_coordinate, _y_lower_left_coordinate - (h / 2));
+            display.print(String(_y_min_label[0])); // Use print instead of write
 
             if (w > _x_drawing_offset)
             {
                 _x_drawing_offset = w;
             }
 
-            // compensation for the y axis tick lines
-            _x_drawing_offset += 4;
+            _x_drawing_offset += 4; // Compensation for the y axis tick lines
         }
     }
-    // draw y divisions
+
+    // Draw y divisions
     for (i = _y_lower_left_coordinate; i <= _y_lower_left_coordinate + _chart_height; i += _yinc_div)
     {
         temp = (i - _y_lower_left_coordinate) * (_y_lower_left_coordinate - _chart_height - _y_lower_left_coordinate) / (_chart_height) + _y_lower_left_coordinate;
         if (i == _y_lower_left_coordinate)
         {
-            drawFastHLine(_x_lower_left_coordinate - 3 + _x_drawing_offset, temp, _chart_width + 3 - _x_drawing_offset, WHITE);
+            display.drawFastHLine(_x_lower_left_coordinate - 3 + _x_drawing_offset, temp, _chart_width + 3 - _x_drawing_offset, WHITE);
         }
         else
         {
-            drawFastHLine(_x_lower_left_coordinate - 3 + _x_drawing_offset, temp, 3, WHITE);
+            display.drawFastHLine(_x_lower_left_coordinate - 3 + _x_drawing_offset, temp, 3, WHITE);
         }
     }
-    // draw x divisions
+
+    // Draw x divisions
     for (i = 0; i <= _chart_width - _x_drawing_offset; i += _xinc_div)
     {
         temp = (i) + _x_lower_left_coordinate + _x_drawing_offset;
         if (i == 0)
         {
-            drawFastVLine(temp, _y_lower_left_coordinate - _chart_height, _chart_height + 3, WHITE);
+            display.drawFastVLine(temp, _y_lower_left_coordinate - _chart_height, _chart_height + 3, WHITE);
         }
         else
         {
-            drawFastVLine(temp, _y_lower_left_coordinate, 3, WHITE);
+            display.drawFastVLine(temp, _y_lower_left_coordinate, 3, WHITE);
         }
     }
+
     if (_mid_line_visible && _mode == DOUBLE_PLOT_MODE)
     {
-        drawFastHLine(_x_lower_left_coordinate + _x_drawing_offset, _y_lower_left_coordinate - _chart_height / 2, _chart_width - _x_drawing_offset, WHITE);
+        display.drawFastHLine(_x_lower_left_coordinate + _x_drawing_offset, _y_lower_left_coordinate - _chart_height / 2, _chart_width - _x_drawing_offset, WHITE);
         for (i = 0; i <= _chart_width - _x_drawing_offset; i += _xinc_div)
         {
-            drawFastVLine(i + _x_lower_left_coordinate + _x_drawing_offset, _y_lower_left_coordinate - _chart_height / 2, 3, WHITE);
+            display.drawFastVLine(i + _x_lower_left_coordinate + _x_drawing_offset, _y_lower_left_coordinate - _chart_height / 2, 3, WHITE);
         }
     }
 }
+
 
 void OLED_SSD1306_Chart::setPlotMode(char mode)
 {
@@ -159,7 +149,7 @@ void OLED_SSD1306_Chart::setLineThickness(char thickness, uint8_t chart)
     }
 }
 
-void OLED_SSD1306_Chart::setYLimitLabels(const char *loLabel, const char *hiLabel, uint8_t chart)
+void OLED_SSD1306_Chart::setYLimitLabels(int loLabel, int hiLabel, uint8_t chart)
 {
     if (chart == 0 || chart == 1)
     {
@@ -214,13 +204,13 @@ void OLED_SSD1306_Chart::_drawLine(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y
     {
         linesToDraw = 2;
         for (size_t i = 0; i < linesToDraw; i++)
-            drawLine(x0, y0 - i, x1, y1, color);
+            display.drawLine(x0, y0 - i, x1, y1, color);
     }
     else if (thickness == NORMAL_LINE)
     {
         linesToDraw = 5;
         for (size_t i = 0; i < linesToDraw; i++)
-            drawLine(x0, y0 + 2 - i, x1, y1, color);
+            display.drawLine(x0, y0 + 2 - i, x1, y1, color);
     }
 }
 
@@ -247,7 +237,7 @@ bool OLED_SSD1306_Chart::updateChart(double firstValue, double secondValue)
         _previous_y_coordinate[0] = y;
 
         if (_point_geometry[0] == POINT_GEOMETRY_CIRCLE)
-            fillCircle(_previous_x_coordinate[0] + _x_drawing_offset, _previous_y_coordinate[0], 2, WHITE);
+            display.fillCircle(_previous_x_coordinate[0] + _x_drawing_offset, _previous_y_coordinate[0], 2, WHITE);
 
         return true;
     }
@@ -272,9 +262,9 @@ bool OLED_SSD1306_Chart::updateChart(double firstValue, double secondValue)
         _previous_y_coordinate[1] = secondY;
 
         if (_point_geometry[0] == POINT_GEOMETRY_CIRCLE)
-            fillCircle(_previous_x_coordinate[0] + _x_drawing_offset, _previous_y_coordinate[0], 2, WHITE);
+            display.fillCircle(_previous_x_coordinate[0] + _x_drawing_offset, _previous_y_coordinate[0], 2, WHITE);
         if (_point_geometry[1] == POINT_GEOMETRY_CIRCLE)
-            fillCircle(_previous_x_coordinate[1] + _x_drawing_offset, _previous_y_coordinate[1], 2, WHITE);
+            display.fillCircle(_previous_x_coordinate[1] + _x_drawing_offset, _previous_y_coordinate[1], 2, WHITE);
 
         return true;
     }
